@@ -1,6 +1,6 @@
 {
   "name": "tg-seq-gen",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "dna sequence generator",
   "main": "index.js",
   "scripts": {

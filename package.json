@@ -1,0 +1,14 @@
+{
+  "name": "tg-seq-gen",
+  "version": "1.0.0",
+  "description": "dna sequence generator",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Teselagen",
+  "license": "ISC",
+  "dependencies": {
+    "commander": "^2.19.0"
+  }
+}

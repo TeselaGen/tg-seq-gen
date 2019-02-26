@@ -8,6 +8,7 @@ var program = require('commander');
  
 program
   .version('0.0.1')
+  .description('Generate sequences of varying formats (gb|csv|fasta)')
   .option('-c, --count [count]', 'how many to export of each specified type', "100")
   .option('-t, --type [type]', 'choose one or more of [gb|csv|fasta]', 'gb')
   .parse(process.argv);

@@ -10,7 +10,7 @@
   "author": "Teselagen",
   "license": "MIT",
   "dependencies": {
-    "commander": "^2.19.0"
+    "commander": "^3.0.2"
   },
   "bin": {
     "tg-seq-gen": "./index.js"

@@ -23,7 +23,7 @@ npx tg-seq-gen --minLength 10 --maxLength 20
 ```
 -i, --minLength
 min length for the seqs being generated
-default=10
+default=1000
 
 -m, --maxLength
 max length for the seqs being generated
@@ -31,7 +31,7 @@ default=10000
 
 -c, --count
 how many to export of each specified type
-default=1000
+default=10
   
 -t, --type
 choose one of [gb|csv|fasta]

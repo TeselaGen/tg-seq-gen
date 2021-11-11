@@ -3,6 +3,10 @@ Generate sequences of varying formats (gb|csv|fasta). By default it will generat
 
 # Usage:
 ```
+npx tg-seq-gen -h 
+
+..or..
+
 npx tg-seq-gen 
 
 ..or..

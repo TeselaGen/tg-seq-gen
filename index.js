@@ -24,7 +24,7 @@ program
   .option(
     "-i, --minLength [minLength]",
     "min length for the seqs being generated",
-    defaultCount
+    defaultMinLength
   )
   .option(
     "-m, --maxLength [maxLength]",
@@ -34,7 +34,7 @@ program
   .option(
     "-c, --count [count]",
     "how many to export of each specified type",
-    defaultMinLength
+    defaultCount
   )
   .option("-t, --type [type]", "choose one of [gb|csv|fasta]", "gb")
   .parse(process.argv);

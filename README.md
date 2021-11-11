@@ -44,3 +44,10 @@ default=gb
 -l, --lengths [lengths]
 a comma separated list of how long the sequences should be, overrides min/max length
 ```
+
+# Publishing
+Don't forget to manually change the version number under index.js:
+```
+program
+  .version("1.0.3")
+```

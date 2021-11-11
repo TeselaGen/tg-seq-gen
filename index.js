@@ -13,7 +13,7 @@ const {
 } = require("./helperFns");
 
 program
-  .version("0.0.1")
+  .version("1.0.3")
   .description(
     "Generate sequences of varying formats (gb|csv|fasta). By default it will generate 100 sequences with random lengths between 1k and 10k bps"
   )

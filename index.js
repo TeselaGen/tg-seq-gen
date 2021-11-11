@@ -1,128 +1,50 @@
 #!/usr/bin/env node
- 
+
 /**
  * Module dependencies.
  */
- 
-var program = require('commander');
- 
+
+const program = require("commander");
+const {
+  getSequenceFileForType,
+  defaultCount,
+  defaultMaxLength,
+  defaultMinLength,
+} = require("./helperFns");
+
 program
-  .version('0.0.1')
-  .description('Generate sequences of varying formats (gb|csv|fasta)')
-  .option('-c, --count [count]', 'how many to export of each specified type', "100")
-  .option('-t, --type [type]', 'choose one of [gb|csv|fasta]', 'gb')
+  .version("0.0.1")
+  .description(
+    "Generate sequences of varying formats (gb|csv|fasta). By default it will generate 100 sequences with random lengths between 1k and 10k bps"
+  )
+  .option(
+    "-l, --lengths [lengths]",
+    "a comma separated list of how long the sequences should be, overrides min/max length"
+  )
+  .option(
+    "-i, --minLength [minLength]",
+    "min length for the seqs being generated",
+    defaultCount
+  )
+  .option(
+    "-m, --maxLength [maxLength]",
+    "max length for the seqs being generated",
+    defaultMaxLength
+  )
+  .option(
+    "-c, --count [count]",
+    "how many to export of each specified type",
+    defaultMinLength
+  )
+  .option("-t, --type [type]", "choose one of [gb|csv|fasta]", "gb")
   .parse(process.argv);
- 
 
-console.log("file type: ",program.type)
-console.log("count: ", program.count)
-
-const fs = require("fs");
-
-function generateCSVFormatSeqs(seqCount) {
-  var bps = ["a", "g", "c", "t"];
-  var minBps = 1000;
-  var maxBps = 10000;
-
-  var seqs = [];
-  for (var i = 0; i < seqCount; i++) {
-    var newSeq = "";
-    for (
-      var j = 0;
-      j < Math.floor(Math.random() * (maxBps - minBps) + minBps);
-      j++
-    ) {
-      newSeq += bps[Math.floor(Math.random() * 4)];
-    }
-    newSeq += "";
-    seqs.push(newSeq);
-  }
-
-  var data = "Name,Sequence\n";
-
-  seqs.forEach((s, i) => {
-    data += "pJK000" + (i + 1) + "," + s + "\n";
-  });
-
-  console.log("data", data);
-
-  fs.writeFile(`${seqCount}_sequences_with_names.csv`, data, err => {
-    // throws an error, you could also catch it here
-    if (err) throw err;
-
-    // success case, the file was saved
-    console.log("Sequences saved!");
-  });
+console.info("file type: ", program.type);
+console.info("count: ", program.count);
+if (program.lengths) {
+  console.info("generating seqs w/ lengths: ", program.lengths);
+} else {
+  console.info("generating seqs between: ", program.lengths);
 }
 
-function generateFastaFormatSeqs(seqCount) {
-  var bps = ["a", "g", "c", "t"];
-  var min = 20;
-  var maxBps = 100;
-
-  var seqs = [];
-  for (var i = 0; i < seqCount; i++) {
-    var newSeq = "atg";
-    for (var j = 0; j < Math.floor(Math.random() * (max - min) + min); j++) {
-      newSeq += bps[Math.floor(Math.random() * 4)];
-    }
-    newSeq += "taa";
-    seqs.push(newSeq);
-  }
-
-  var fasta = seqs.map((s, i) => {
-    return ">pkc_00" + i + "||" + s.length + "|linear\n" + s;
-  });
-}
-
-function generateGenbanks(seqCount) {
-  var bps = ["a", "g", "c", "t"];
-  var min = 1;
-  var max = 10;
-
-  var genbanks = [];
-  for (var i = 0; i < seqCount; i++) {
-    var newBps = "";
-    for (var j = 0; j < Math.floor(Math.random() * (max - min) + min); j++) {
-      newBps += bps[Math.floor(Math.random() * 4)];
-    }
-
-    var newName = "pkc_00" + (i + 1);
-
-    var newGenbank =
-      "LOCUS       " +
-      newName +
-      "         " +
-      newBps.length +
-      " bp    DNA     linear  19-NOV-2018\n" +
-      "ORIGIN      \n" +
-      "        1 " +
-      newBps +
-      "\n" +
-      "//\n";
-
-    genbanks.push(newGenbank);
-  }
-
-  genbanks.forEach((gb, i) => {
-    fs.writeFile(`gb_sequence_${i}.gb`, gb, err => {
-      // throws an error, you could also catch it here
-      if (err) throw err;
-
-      // success case, the file was saved
-      // console.log('Sequences saved!');
-    });
-  });
-  console.log("Sequences saved!");
-}
-
-if (program.type === "gb") {
-  generateGenbanks(program.count);
-
-} else if (program.type === "csv"){
-  generateCSVFormatSeqs(program.count);
-
-} else if (program.type === "fasta"){
-  generateFastaFormatSeqs(program.count);
-
-}
+getSequenceFileForType(program);

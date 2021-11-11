@@ -5,7 +5,7 @@
   "main": "index.js",
   "repository": "https://github.com/TeselaGen/tg-seq-gen",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node test.js"
   },
   "author": "Teselagen",
   "license": "MIT",
@@ -14,5 +14,9 @@
   },
   "bin": {
     "tg-seq-gen": "./index.js"
+  },
+  "devDependencies": {
+    "eslint": "6",
+    "eslint-config-teselagen": "^5.0.9"
   }
 }

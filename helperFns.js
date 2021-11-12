@@ -17,10 +17,25 @@ function genHelper(
   },
   fn
 ) {
+  if (lengths && typeof lengths === "string") {
+    lengths = lengths.split(",").map((n) => Number(n) || 10);
+  }
+  let lastLength = 0;
   let toRet = [];
   for (let i = 0; i < count; i++) {
     const name = "pTG_00" + (i + 1);
-    const bps = getBps({ lengths, maxLength, minLength, isCDS });
+    let length;
+
+    if (lengths) {
+      length = lengths[lastLength];
+      lastLength++;
+      if (lastLength === lengths.length) {
+        lastLength = 0;
+      }
+    }
+
+    const bps = getBps({ length, maxLength, minLength, isCDS });
+
     toRet.push(fn({ name, bps }));
   }
   if (postProcess) {
@@ -38,22 +53,24 @@ function genHelper(
   }
 }
 
-function getBps({ lengths, maxLength, minLength, isCDS }) {
+function getBps({ length, maxLength, minLength, isCDS }) {
+  console.log(`length:`, length);
   const bps = ["a", "g", "c", "t"];
   let newBps = isCDS ? "atg" : "";
   if (isCDS) {
     //resize the lengths to account for the cds
-    if (lengths) {
-      lengths.forEach((length, i) => {
-        lengths[i] = length - 6;
-      });
+    if (length) {
+      length = length - 6;
     } else {
       maxLength = maxLength - 6;
     }
   }
   for (
     let j = 0;
-    j < Math.floor(Math.random() * (maxLength - minLength) + minLength);
+    j <
+    (length
+      ? length
+      : Math.floor(Math.random() * (maxLength - minLength) + minLength));
     j++
   ) {
     newBps += bps[Math.floor(Math.random() * 4)];
@@ -61,6 +78,7 @@ function getBps({ lengths, maxLength, minLength, isCDS }) {
   if (isCDS) {
     newBps += "taa";
   }
+  console.log(`newBps.length:`, newBps.length);
   return newBps;
 }
 

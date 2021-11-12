@@ -1,6 +1,6 @@
 {
   "name": "tg-seq-gen",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "dna sequence generator",
   "main": "index.js",
   "repository": "https://github.com/TeselaGen/tg-seq-gen",

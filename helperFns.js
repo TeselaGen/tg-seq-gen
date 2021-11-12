@@ -54,7 +54,6 @@ function genHelper(
 }
 
 function getBps({ length, maxLength, minLength, isCDS }) {
-  console.log(`length:`, length);
   const bps = ["a", "g", "c", "t"];
   let newBps = isCDS ? "atg" : "";
   if (isCDS) {
@@ -78,7 +77,6 @@ function getBps({ length, maxLength, minLength, isCDS }) {
   if (isCDS) {
     newBps += "taa";
   }
-  console.log(`newBps.length:`, newBps.length);
   return newBps;
 }
 

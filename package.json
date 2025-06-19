@@ -1,11 +1,12 @@
 {
   "name": "tg-seq-gen",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "dna sequence generator",
   "main": "index.js",
   "repository": "https://github.com/TeselaGen/tg-seq-gen",
   "scripts": {
-    "test": "node test.js"
+    "test": "node index.test.js",
+    "test:shell": "bash shell-test.sh"
   },
   "author": "Teselagen",
   "license": "MIT",

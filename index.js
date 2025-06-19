@@ -37,6 +37,11 @@ program
     defaultCount
   )
   .option("-t, --type [type]", "choose one of [gb|csv|fasta]", "gb")
+  .option(
+    "-f, --numFeatures [numFeatures]",
+    "number of random features to add to genbank files",
+    0
+  )
   .parse(process.argv);
 
 console.info("file type: ", program.type);

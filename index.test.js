@@ -1,6 +1,13 @@
 const assert = require("assert");
 const { getSequenceFileForType } = require("./helperFns");
 
+// Feature types that can appear in GenBank files
+const featureTypes = [
+  "CDS", "gene", "misc_feature", "promoter", "terminator",
+  "rep_origin", "enhancer", "attenuator", "misc_binding", 
+  "protein_bind", "misc_signal", "regulatory"
+];
+
 const it = (desc, fn) => {
   try {
     fn();
@@ -41,15 +48,40 @@ it(`can generate genbanks passing defined lengths`, () => {
 });
 
 it(`can generate fasta`, () => {
-  const gbs = getSequenceFileForType({
+  const fastas = getSequenceFileForType({
     type: "fasta",
     toFile: false,
   });
+  assert.strictEqual(fastas.length, 10);
+  assert.strictEqual(fastas[0].includes(">pTG_001"), true);
+  assert.strictEqual(fastas[0].length > 1000, true);
+  assert.strictEqual(fastas[9].includes(">pTG_0010"), true);
+});
+it(`can generate genbanks with random features`, () => {
+  const numFeatures = 3;
+  const gbs = getSequenceFileForType({
+    type: "gb",
+    toFile: false,
+    numFeatures: numFeatures
+  });
   assert.strictEqual(gbs.length, 10);
-  assert.strictEqual(gbs[0].includes("LOCUS       pTG_001"), true);
-  assert.strictEqual(gbs[0].includes("//\n"), true);
-  assert.strictEqual(gbs[0].length > 1000, true);
-  assert.strictEqual(gbs[9].includes("LOCUS       pTG_0010"), true);
+  assert.strictEqual(gbs[0].includes("FEATURES             Location/Qualifiers"), true);
+  
+  // Count the number of feature entries by counting label occurrences
+  const labelMatches = gbs[0].match(/\/label="/g) || [];
+  assert.strictEqual(labelMatches.length, numFeatures);
+
+  // Check that the feature entries contain valid positions
+  const featureMatch = gbs[0].match(/\s+\w+\s+(\d+)\.\.(\d+)/);
+  assert.strictEqual(featureMatch !== null, true);
+  
+  const start = parseInt(featureMatch[1], 10);
+  const end = parseInt(featureMatch[2], 10);
+  assert.strictEqual(start <= end, true);
+  
+  // Verify feature types exist
+  const featureTypePattern = new RegExp(featureTypes.join("|"));
+  assert.strictEqual(featureTypePattern.test(gbs[0]), true);
 });
 
 function getLength(a) {

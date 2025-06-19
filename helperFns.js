@@ -4,6 +4,57 @@ const defaultCount = 10;
 const defaultMaxLength = 10000;
 const defaultMinLength = 1000;
 
+// Feature types that can appear in GenBank files
+const featureTypes = [
+  "CDS",
+  "gene",
+  "misc_feature",
+  "promoter",
+  "terminator",
+  "rep_origin",
+  "enhancer",
+  "attenuator",
+  "misc_binding",
+  "protein_bind",
+  "misc_signal",
+  "regulatory",
+];
+
+// Function to generate a random feature for GenBank format
+function generateRandomFeature(seqLength) {
+  // Select a random feature type
+  const featureType =
+    featureTypes[Math.floor(Math.random() * featureTypes.length)];
+
+  // Generate a random start position (at least 10bp from the end)
+  const maxStart = Math.max(1, seqLength - 10);
+  const start = Math.floor(Math.random() * maxStart) + 1;
+
+  // Generate a random end position (between start and end of sequence)
+  const end = Math.floor(Math.random() * (seqLength - start)) + start;
+
+  // Generate a random name for the feature
+  const featureName = `feature_${Math.floor(Math.random() * 10000)}`;
+
+  // Format the feature in GenBank style
+  return `     ${featureType}             ${start}..${end}
+                     /label="${featureName}"
+                     /note="randomly generated feature"
+`;
+}
+
+// Function to generate multiple random features for a sequence
+function generateFeatures(seqLength, numFeatures) {
+  let features = "";
+  if (numFeatures > 0) {
+    features = "FEATURES             Location/Qualifiers\n";
+    for (let i = 0; i < numFeatures; i++) {
+      features += generateRandomFeature(seqLength);
+    }
+  }
+  return features;
+}
+
 function genHelper(
   {
     count = defaultCount,
@@ -83,12 +134,24 @@ function getBps({ length, maxLength, minLength, isCDS }) {
 function getSequenceFileForType(opts) {
   if (opts.type === "gb") {
     return genHelper(opts, ({ name, bps }) => {
+      // Get the current date in the format used in GenBank files
+      const today = new Date();
+      const dateString = today.toLocaleDateString('en-US', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric'
+      }).replace(/(\w+)-(\d+)-(\d+)/, '$1-$3').toUpperCase();
+      
+      // Generate features if numFeatures is specified
+      const features = opts.numFeatures ? generateFeatures(bps.length, opts.numFeatures) : '';
+      
       return (
         "LOCUS       " +
         name +
         "         " +
         bps.length +
-        " bp    DNA     linear  19-NOV-2018\n" +
+        " bp    DNA     linear  " + dateString + "\n" +
+        features +
         "ORIGIN      \n" +
         "        1 " +
         bps +
@@ -113,7 +176,7 @@ function getSequenceFileForType(opts) {
       }
     );
   } else if (opts.type === "fasta") {
-    genHelper(opts, ({ name, bps }) => {
+    return genHelper(opts, ({ name, bps }) => {
       return ">" + name + "||" + bps.length + "|linear\n" + bps;
     });
   }
